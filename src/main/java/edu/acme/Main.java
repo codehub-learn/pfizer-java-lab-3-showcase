@@ -16,7 +16,7 @@ public class Main {
 
     private static final Logger log = LoggerFactory.getLogger(Main.class);
 
-    public static void main(String[] args) throws ClassNotFoundException, SQLException {
+    public static void main(String[] args) throws SQLException {
         final UniversityFactory universityFactory = new UniversityFactory();
         final List<University> universities = universityFactory.getSampleData();
         universities.forEach(university -> log.info("University: {}", university));
@@ -25,9 +25,9 @@ public class Main {
         final List<Student> students = studentFactory.getSampleData();
         students.forEach(student -> log.info("Student: {}", student));
 
-
-        Class.forName ("org.h2.Driver");
-        Connection conn = DriverManager.getConnection ("jdbc:h2:mem:university", "sa","");
-        conn.close();
+        try (Connection conn = DriverManager.getConnection ("jdbc:h2:mem:university", "sa","")){
+            final String productVersion = conn.getMetaData().getDatabaseProductVersion();
+            log.info(productVersion);
+        }
     }
 }

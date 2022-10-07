@@ -5,6 +5,7 @@ import edu.acme.factory.UniversityFactory;
 import edu.acme.model.Student;
 import edu.acme.model.University;
 import edu.acme.repository.DatabaseSource;
+import edu.acme.repository.DatabaseSourceConnectionPooling;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -27,7 +28,7 @@ public class Main {
         List<Student> students = studentFactory.getSampleData();
         students.forEach(student -> log.info("Student: {}", student));
 
-        try (Connection connection = DatabaseSource.getConnection()){
+        try (Connection connection = DatabaseSourceConnectionPooling.getConnection()){
             String productVersion = connection.getMetaData().getDatabaseProductVersion();
             log.info(productVersion);
         }

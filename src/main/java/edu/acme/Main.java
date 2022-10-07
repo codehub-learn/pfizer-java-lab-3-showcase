@@ -13,6 +13,7 @@ import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.List;
 
 public class Main {
@@ -31,6 +32,10 @@ public class Main {
         try (Connection connection = DatabaseSourceConnectionPooling.getConnection()){
             String productVersion = connection.getMetaData().getDatabaseProductVersion();
             log.info(productVersion);
+
+            Statement statement = connection.createStatement();
+            int i = statement.executeUpdate("CREATE TABLE UNIVERSITY");
+            log.info("{}", i);
         }
     }
 }

@@ -6,6 +6,8 @@ import edu.acme.model.Student;
 import edu.acme.model.University;
 import edu.acme.repository.DatabaseSource;
 import edu.acme.repository.DatabaseSourceConnectionPooling;
+import edu.acme.repository.UniversityRepository;
+import edu.acme.service.UniversityService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -41,6 +43,19 @@ public class Main {
                 createTable(query);
             } catch (SQLException e) {
                 log.error("Something went wrong during the creation of the tables");
+            }
+        });
+
+        UniversityService universityService = new UniversityService(new UniversityRepository());
+        universities.forEach(university -> {
+            try {
+                universityService.create(university);
+            } catch (Exception e) {
+                // FYI, this is going to throw an error because when you attempt to save a department, it requires the
+                // ID of the university, which is not known at the time of the save (it is null). There are ways to solve
+                // this, the most used one can be found here:
+                // https://www.baeldung.com/jdbc-returning-generated-keys
+                log.error("Something went wrong during the insertion of a row in the tables");
             }
         });
 
